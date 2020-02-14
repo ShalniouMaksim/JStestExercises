@@ -13,6 +13,7 @@ import concat from './concat';
 import normalizeData from './normalizeData';
 import flatten from './flatten';
 import solution from './solution';
+import hash from './hash';
 
 const a = [1, 2, 3, 4, 5];
 const b = [10, 7, -1, 6];
@@ -61,3 +62,19 @@ console.log('flatten:');
 console.log(flatten([1, 2, [3, 5], [[4, 3], 2]]));
 console.log('SOLUTION:');
 console.log(solution('¯|___|¯¯¯¯¯|___|¯|_|¯'));
+console.log('HASH');
+const obj = {
+  person: {
+    name: 'joe',
+    history: {
+      hometown: 'bratislava',
+      bio: {
+        funFact: 'I like fishing.',
+      },
+    },
+  },
+};
+// eslint-disable-next-line no-extend-native
+Object.prototype.hashs = hash;
+console.log(obj.hashs('person.history.bio')); // { funFact: 'I like fishing.' }
+console.log('IQTEST:');
