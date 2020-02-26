@@ -1,0 +1,128 @@
+<body>
+  <div style="margin-left:250px">
+    <div style="float:left">
+      <button
+        onclick="getPreviousWeek();"
+        style="width: 50px;height: 20px;"
+        id="previousWeek"
+      ></button>
+    </div>
+    <div style="float:left"><p style="margin-top: 0px;" id="date"></p></div>
+    <div style="float:left">
+      <button
+        onclick="getNextWeek();"
+        style="width: 50px;height: 20px;"
+        id="nextWeek"
+      ></button>
+    </div>
+  </div>
+  <div style="text-align: center;"></div>
+  <input
+    placeholder="Input date"
+    style="width: 200px;height: 30px;"
+    id="dateInput"
+  />
+  <button onclick="renderDates();" style="width: 50px;height: 20px;"></button>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+</body>
+<script>
+  var nameInput;
+  function getNextWeek() {
+    const dateInput = document.getElementById('date').innerHTML;
+    const splitedDate = dateInput.split(',');
+    const index = splitedDate.length - 1;
+    const lastDayOfWeek = moment(splitedDate[index], 'DD.MM.YYYY').add(
+      1,
+      'day',
+    );
+    const dates = [
+      lastDayOfWeek.format('DD.MM.YYYY'),
+      lastDayOfWeek.add(1, 'day').format('DD.MM.YYYY'),
+      lastDayOfWeek.add(1, 'day').format('DD.MM.YYYY'),
+      lastDayOfWeek.add(1, 'day').format('DD.MM.YYYY'),
+      lastDayOfWeek.add(1, 'day').format('DD.MM.YYYY'),
+      lastDayOfWeek.add(1, 'day').format('DD.MM.YYYY'),
+      lastDayOfWeek.add(1, 'day').format('DD.MM.YYYY'),
+    ];
+    document.getElementById('date').innerHTML = dates;
+    checkLeftButtonState(nameInput);
+    checkRightButtonState(nameInput);
+  }
+  function getPreviousWeek() {
+    const dateInput = document.getElementById('date').innerHTML;
+    const splitedDate = dateInput.split(',');
+    const firstDayOfWeek = moment(splitedDate[0], 'DD.MM.YYYY').add(-1, 'day');
+    const dates = [
+      firstDayOfWeek.add(-6, 'day').format('DD.MM.YYYY'),
+      firstDayOfWeek.add(1, 'day').format('DD.MM.YYYY'),
+      firstDayOfWeek.add(1, 'day').format('DD.MM.YYYY'),
+      firstDayOfWeek.add(1, 'day').format('DD.MM.YYYY'),
+      firstDayOfWeek.add(1, 'day').format('DD.MM.YYYY'),
+      firstDayOfWeek.add(1, 'day').format('DD.MM.YYYY'),
+      firstDayOfWeek.add(1, 'day').format('DD.MM.YYYY'),
+    ];
+    document.getElementById('date').innerHTML = dates;
+    checkLeftButtonState(nameInput);
+    checkRightButtonState(nameInput);
+  }
+</script>
+<script>
+  'use strict';
+  function renderDates() {
+    nameInput = document.getElementById('dateInput').value;
+    const firstMondayOfMounth = moment(nameInput)
+      .startOf('month')
+      .startOf('week')
+      .add(1, 'day');
+    const dates = [
+      firstMondayOfMounth.format('DD.MM.YYYY'),
+      firstMondayOfMounth.add(1, 'day').format('DD.MM.YYYY'),
+      firstMondayOfMounth.add(1, 'day').format('DD.MM.YYYY'),
+      firstMondayOfMounth.add(1, 'day').format('DD.MM.YYYY'),
+      firstMondayOfMounth.add(1, 'day').format('DD.MM.YYYY'),
+      firstMondayOfMounth.add(1, 'day').format('DD.MM.YYYY'),
+      firstMondayOfMounth.add(1, 'day').format('DD.MM.YYYY'),
+    ];
+    document.getElementById('date').innerHTML = dates;
+    checkLeftButtonState(nameInput);
+    checkRightButtonState(nameInput);
+  }
+  function checkLeftButtonState(nameInput) {
+    const dateInput = document.getElementById('date').innerHTML;
+    const splitedDate = dateInput.split(',');
+    if (
+      splitedDate.findIndex(
+        (a) =>
+          a ===
+          moment(nameInput)
+            .startOf('month')
+            .format('DD.MM.YYYY'),
+      ) !== -1
+    ) {
+      document.getElementById('previousWeek').disabled = true;
+      document.getElementById('previousWeek').style.background = '#FFC0CB';
+    } else {
+      document.getElementById('previousWeek').disabled = false;
+      document.getElementById('previousWeek').style.background = 'buttonface';
+    }
+  }
+  function checkRightButtonState() {
+    const dateInput = document.getElementById('date').innerHTML;
+    const splitedDate = dateInput.split(',');
+    if (
+      splitedDate.findIndex(
+        (a) =>
+          a ===
+          moment(nameInput)
+            .endOf('month')
+            .format('DD.MM.YYYY'),
+      ) !== -1
+    ) {
+      document.getElementById('nextWeek').disabled = true;
+      document.getElementById('nextWeek').style.background = '#FFC0CB';
+    } else {
+      document.getElementById('nextWeek').disabled = false;
+      document.getElementById('nextWeek').style.background = 'buttonface';
+    }
+  }
+</script>

@@ -1,11 +1,34 @@
 import solution from './solution';
 import disemvowel from './disemvowel';
 import iqTest from './iqTest';
+import spinWords from './spinWords';
+import { Person, TheSecondPerson } from './person';
+import spread from './spread';
+import test from './test';
+import pigIt from './pigIt';
+import high from './high';
+import rgb from './rgb';
 
 console.log(solution(10));
-console.log(
-  disemvowel('This website is for losers LOL!'),
-);
+console.log(disemvowel('This website is for losers LOL!'));
 console.log(iqTest('2 4 7 8 10'));
 console.log('IQTEST2:');
 console.log(iqTest('1 2 2 2'));
+console.log('SPINWORDS:');
+console.log(spinWords('Hey fellow warriors'));
+console.log('TESTPROTO:');
+Person.prototype.fullName = 'Bob Smith';
+const person1 = new Person('Bob', 'Smith', 32, 'male', ['music', 'skiing']);
+const person2 = new Person();
+console.log(person1);
+console.log(person2.fullName);
+console.log(Object.keys(Person));
+console.log(Object.keys(TheSecondPerson));
+console.log(Object.getPrototypeOf(person1));
+console.log(TheSecondPerson.b);
+console.log(Object.getPrototypeOf(Number));
+console.log(spread`123 321 213`);
+test();
+console.log(pigIt('Pig latin is cool'));
+console.log(high('what time are we climbing up the volcano'));
+console.log(rgb(255, 255, 255));

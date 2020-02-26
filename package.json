@@ -24,6 +24,8 @@
     "eslint-plugin-import": "^2.16.0"
   },
   "dependencies": {
-    "date-fns": "^2.9.0"
+    "cors": "^2.8.5",
+    "date-fns": "^2.9.0",
+    "geocode": "0.0.3"
   }
 }

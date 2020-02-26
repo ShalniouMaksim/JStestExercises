@@ -1,0 +1,127 @@
+<div style="text-align: center;">
+  <input placeholder="Input city" style="width: 200px;height: 30px;" id="inputId" />
+</div>
+<div style="text-align: center;margin-top: 20px;">
+<select style="width: 200px;height: 30px;"id="MyfirstSelect">
+  <option>api.darsky.net</option>
+  <option>api.stormglass.io</option>
+</select>
+</div>
+<div style="text-align: center;">
+  <div style="margin-top: 50px;">
+    Degrees =
+    <p id="Degrees"></p>
+  </div>
+  <div style="margin-top: 50px;">
+    Wind =
+    <p id="Wind"></p>
+  </div>
+  <div style="margin-top: 50px;">
+    Rainfall =
+    <p id="Rain"></p>
+  </div>
+  <button
+    onclick="showInfos();"
+    style="width: 500px;height: 50px;margin-top: 100px;"
+  >
+    Weather
+  </button>
+</div>
+<script>
+  'use strict';
+  async function getCordinatesByCityName(cityName) {
+    let json = '';
+    const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+    const url = `https://geocode.xyz/${cityName}?json=1`;
+    const response = await fetch(proxyUrl + url);
+    if (response.ok) {
+      json = await response.json();
+    } else {
+      alert(`Ошибка HTTP: ${response.status}`);
+    }
+    return { lat: json.latt, lng: json.longt };
+  }
+
+  // Success Handler
+  function successHandler(position) {
+    const {
+      coords: { latitude: lat, longitude: lng },
+    } = position;
+    const selectedIndex = document.getElementById('MyfirstSelect').options
+      .selectedIndex;
+    if (selectedIndex === 0) {
+      getWeatherFromDarkSky(lat, lng);
+    } else getWeatherFromStormglass(lat, lng);
+  }
+
+  // Error Handler
+  function errorHandler(positionError) {
+    if (positionError.code == PositionError.PERMISSION_DENIED) {
+      alert('Error: Permission Denied!');
+    } else if (positionError.code == PositionError.POSITION_UNAVAILABLE) {
+      alert('Error: Position Unavailable!');
+    } else if (positionError.code == PositionError.TIMEOUT) {
+      alert('Error: Timeout!');
+    }
+  }
+
+  async function showInfos() {
+    const nameInput = document.getElementById('inputId');
+    if (nameInput.value === '') {
+      navigator.geolocation.getCurrentPosition(successHandler, errorHandler);
+    } else {
+      const { lat, lng } = await getCordinatesByCityName(nameInput.value);
+      const selectedIndex = document.getElementById('MyfirstSelect').options
+        .selectedIndex;
+      if (selectedIndex === 0) {
+        getWeatherFromDarkSky(lat, lng);
+      } else getWeatherFromStormglass(lat, lng);
+    }
+  }
+
+  async function getWeatherFromDarkSky(lt, lg) {
+    console.log('darksky lg', lg);
+    let json = '';
+    const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+    const url = `https://api.darksky.net/forecast/41978216b30014d67f247239f930b083/${lt},${lg}?units=si&lang=ru`;
+    alert('darksky');
+    const response = await fetch(proxyUrl + url);
+    if (response.ok) {
+      json = await response.json();
+      document.getElementById('Degrees').innerHTML = json.currently.temperature;
+      document.getElementById('Wind').innerHTML = json.currently.windSpeed;
+      document.getElementById('Rain').innerHTML = json.currently.precipType;
+    } else {
+      alert(`Ошибка HTTP: ${response.status}`);
+    }
+  }
+  async function getWeatherFromStormglass(lt, lg) {
+    const I = document.getElementById('inputId');
+    let json = '';
+    const date = new Date();
+    const a = date.toISOString();
+
+    const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+    const url = `https://api.stormglass.io/v1/weather/point?lat=${lt}&lng=${lg}&start=${a}&end=${a}`;
+    const response = await fetch(proxyUrl + url, {
+      headers: {
+        Authorization:
+          'e61f042a-5251-11ea-ac48-0242ac130007-e61f04f2-5251-11ea-ac48-0242ac130007',
+      },
+    });
+    if (response.ok) {
+      json = await response.json();
+    } else {
+      alert(`Ошибка HTTP: ${response.status}`);
+    }
+    document.getElementById('Degrees').innerHTML = JSON.stringify(
+      json.hours[0].airTemperature[0].value,
+    );
+    document.getElementById('Wind').innerHTML = JSON.stringify(
+      json.hours[0].windSpeed[0].value,
+    );
+    if (JSON.stringify(json.hours[0].precipitation[0].value) > 0)
+      document.getElementById('Rain').innerHTML = 'Rain';
+    else document.getElementById('Rain').innerHTML = 'No rain';
+  }
+</script>
